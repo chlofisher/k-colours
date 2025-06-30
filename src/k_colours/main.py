@@ -3,6 +3,7 @@ from scipy.cluster.vq import kmeans
 import numpy as np
 from rich.console import Console
 import click
+from time import perf_counter
 
 
 def main():
@@ -11,12 +12,16 @@ def main():
 
 @click.command()
 @click.option('--k', type=int, default=6, help='Number of clusters.')
+@click.option('--compression', type=int, default=1000, help='Compression ratio for image downsampling. Higher values speed up processing but decrease accuracy.')
 @click.argument('path')
-def colour_palette(path, k):
+def colour_palette(path, k, compression):
     im = iio.imread(path)
 
-    flattened = im.reshape(-1, 3)
-    data = flattened.astype(np.float32)
+    data = im.reshape(-1, 3)
+
+    data = data[::compression]
+
+    data = data.astype(np.float32)
     data /= 256
 
     centroids, distortion = kmeans(data, k)
@@ -43,7 +48,8 @@ def print_colour(rgb: tuple[int, int, int], console: Console, label=None):
     else:
         text_colour = 'bright_white'
 
-    console.print(f"[bold {text_colour} on {hex}]  {label}  [/]", justify="left")
+    console.print(f"[bold {text_colour} on {hex}]  {
+                  label}  [/]", justify="left")
 
 
 def is_light_colour(rgb: tuple[int, int, int]):
