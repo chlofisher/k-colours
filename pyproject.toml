@@ -1,8 +1,10 @@
 [project]
 name = "kcolours"
 version = "0.2.1"
-description = ""
+description = "CLI tool to extract a colour palette from an image using k-means clustering."
 readme = "README.md"
+license = { file = "LICENSE.md" }
+authors = [{ name = "Chloe Fisher", email = "dev@chlofisher.com" }]
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.2.1",
@@ -14,3 +16,7 @@ dependencies = [
 
 [project.scripts]
 kcolours = "kcolours.cli:run"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
