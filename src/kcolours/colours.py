@@ -1,27 +1,57 @@
-import imageio.v3 as iio
+from imageio.v3 import imread
 from scipy.cluster.vq import kmeans
 import numpy as np
+from numpy.typing import NDArray
 
 
-def colour_palette(path, k, samples) -> list[tuple[int, int, int]]:
-    im = iio.imread(path).astype(np.float32)
-    im /= 255
+def colour_palette(path: str, k: int, samples: int) -> list[tuple[int, int, int]]:
+    """Returns a colour palette obtained by clustering the colours in an image file.
 
-    flat_image = im.reshape(-1, 3)
+    Args:
+        path (str): Path to the image file.
+        k (int): Number of colours in the palette.
+        samples (int): Number of samples to take from the image.
 
-    compression = flat_image.shape[0] // samples
-
-    data = flat_image[::compression].astype(np.float32)
-
-    centroids, distortion = kmeans(data, k)
-
-    colours = np.rint(centroids * 255).astype(int)
+    Returns:
+       list[tuple[int, int, int]]: Colour palette comprised of a list of
+        RGB colours.
+    """
+    image: NDArray[np.float32] = read_image_rgb(path)
+    flat_image = flatten(image)
+    samples = sample(flat_image, samples)
+    centroids = clusters(samples, k)
+    colours: NDArray[int] = round_rgb(centroids)
 
     return [tuple(col) for col in colours]
+
+
+def read_image_rgb(path: str) -> NDArray[np.float32]:
+    return imread(path).astype(np.float32)
+
+
+def flatten(image: NDArray) -> NDArray:
+    return image.reshape(-1, 3)
+
+
+# Take n evenly spaced samples from the flattened image array.
+def sample(data: NDArray, n_samples: int) -> NDArray:
+    compression = data.shape[0] // n_samples
+    return data[::compression]
+
+
+# Cluster the RGB values using the kmeans algorithm.
+def clusters(data: NDArray, k: int) -> NDArray:
+    centroids, distortion = kmeans(data, k)
+    return centroids
+
+
+def round_rgb(colours: NDArray[np.floating]) -> NDArray[int]:
+    return np.rint(colours).astype(int)
 
 
 def brightness(rgb: tuple[int, int, int]):
     r, g, b = rgb
 
     # Perceived brightness formula (ITU-R BT.601)
+
     return 0.299 * r + 0.587 * g + 0.114 * b
