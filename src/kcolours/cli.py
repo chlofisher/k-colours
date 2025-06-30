@@ -1,33 +1,14 @@
-import imageio.v3 as iio
-from scipy.cluster.vq import kmeans
-import numpy as np
-from rich.console import Console
 import click
-
-
-def main():
-    colour_palette()
+from .colours import brightness, colour_palette
+from rich.console import Console
 
 
 @click.command()
 @click.option('--k', type=int, default=6, help='Number of clusters.')
 @click.option('--samples', type=int, default=1000, help='Number of samples to take from the image. Higher numbers result in more accurate clustering, at the cost of performance.')
 @click.argument('path')
-def colour_palette(path, k, samples):
-    im = iio.imread(path)
-
-    flat_image = im.reshape(-1, 3)
-
-    compression = flat_image.shape[0] // samples
-    data = flat_image[::compression]
-
-    data = data.astype(np.float32)
-    data /= 256
-
-    centroids, distortion = kmeans(data, k)
-
-    colours = np.rint(centroids * 255).astype(int)
-    colours = [tuple(col) for col in colours]
+def run(path, k, samples):
+    colours = colour_palette(path, k, samples)
 
     console = Console()
     for col in colours:
@@ -53,14 +34,6 @@ def print_colour(rgb: tuple[int, int, int], console: Console, label=None):
 
 
 def is_light_colour(rgb: tuple[int, int, int]):
-    r, g, b = rgb
     THRESHOLD = 186
 
-    # Perceived brightness formula (ITU-R BT.601)
-    brightness = (0.299 * r + 0.587 * g + 0.114 * b)
-
-    return brightness > THRESHOLD
-
-
-if __name__ == "__main__":
-    main()
+    return brightness(rgb) > THRESHOLD
