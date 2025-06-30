@@ -3,7 +3,6 @@ from scipy.cluster.vq import kmeans
 import numpy as np
 from rich.console import Console
 import click
-from time import perf_counter
 
 
 def main():
@@ -12,14 +11,15 @@ def main():
 
 @click.command()
 @click.option('--k', type=int, default=6, help='Number of clusters.')
-@click.option('--compression', type=int, default=1000, help='Compression ratio for image downsampling. Higher values speed up processing but decrease accuracy.')
+@click.option('--samples', type=int, default=1000, help='Number of samples to take from the image. Higher numbers result in more accurate clustering, at the cost of performance.')
 @click.argument('path')
-def colour_palette(path, k, compression):
+def colour_palette(path, k, samples):
     im = iio.imread(path)
 
-    data = im.reshape(-1, 3)
+    flat_image = im.reshape(-1, 3)
 
-    data = data[::compression]
+    compression = flat_image.shape[0] // samples
+    data = flat_image[::compression]
 
     data = data.astype(np.float32)
     data /= 256
