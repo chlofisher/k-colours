@@ -7,7 +7,7 @@ Extracts a colour palette from an image in the terminal using ![k-means clusteri
 
 |                      |                                                                                 |
 | -------------------- | ------------------------------------------------------------------------------- |
-| ![](./demo/demo.gif) | ![*The Great Wave off Kanagawa*, Katsushika Hokusa (1831)](./demo/kanagawa.jpg) |
+| ![](https://raw.githubusercontent.com/chlofisher/kcolours/main/demo/demo.gif) | ![*The Great Wave off Kanagawa*, Katsushika Hokusa (1831)](https://raw.githubusercontent.com/chlofisher/kcolours/main/demo/kanagawa.jpg) |
 
 --- 
 ## Installation & Usage
