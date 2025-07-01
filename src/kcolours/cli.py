@@ -14,6 +14,7 @@ def run(path: str, k: int, samples: int):
 
 
 def output_colours(colours: list[tuple[int, int, int]]):
+    # Use rich.console.Console for colour formatting
     console = Console()
 
     for col in colours:
@@ -28,15 +29,20 @@ def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
 def print_colour(rgb: tuple[int, int, int], console: Console,
                  label: str | None = None):
     hex: str = rgb_to_hex(rgb)
+    # If no label is provided, use the hex code as a default
     label: str = label or hex
 
-    if is_light_colour(rgb):
-        text_colour = 'black'
-    else:
-        text_colour = 'bright_white'
+    BLACK = '#111111'
+    WHITE = '#eeeeee'
 
-    console.print(f"[bold {text_colour} on {hex}]  {
-                  label}  [/]", justify="left")
+    # Use white text on dark colours and vice versa
+    if is_light_colour(rgb):
+        text_colour = BLACK
+    else:
+        text_colour = WHITE
+
+    formatted_output = f'[bold {text_colour} on {hex}]  {label}  [/]'
+    console.print(formatted_output, justify='left')
 
 
 def is_light_colour(rgb: tuple[int, int, int]):

@@ -16,6 +16,7 @@ def colour_palette(path: str, k: int, samples: int) -> list[tuple[int, int, int]
        list[tuple[int, int, int]]: Colour palette comprised of a list of
         RGB colours.
     """
+
     image: NDArray[np.float32] = read_image_rgb(path)
     flat_image = flatten(image)
     samples = sample(flat_image, samples)
