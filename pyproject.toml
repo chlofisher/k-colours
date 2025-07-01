@@ -1,6 +1,6 @@
 [project]
 name = "kcolours"
-version = "0.2.1"
+version = "1.0.0"
 description = "CLI tool to extract a colour palette from an image using k-means clustering."
 readme = "README.md"
 license = { file = "LICENSE.md" }
