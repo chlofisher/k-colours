@@ -17,10 +17,15 @@ def colour_palette(path: str, k: int, samples: int) -> list[tuple[int, int, int]
         RGB colours.
     """
 
+    # Read the image to an array, flatten, and then downsample
     image: NDArray[np.float32] = read_image_rgb(path)
     flat_image = flatten(image)
     samples = sample(flat_image, samples)
+
+    # Perform k-means clustering on the colours in the image
     centroids = clusters(samples, k)
+
+    # Convert the obtained centroids back to integer RGB values
     colours: NDArray[int] = round_rgb(centroids)
 
     return [tuple(col) for col in colours]
