@@ -1,4 +1,5 @@
 from imageio.v3 import imread
+from skimage.color import rgb2lab, lab2rgb
 from scipy.cluster.vq import kmeans
 import numpy as np
 from numpy.typing import NDArray
@@ -22,11 +23,16 @@ def colour_palette(path: str, k: int, samples: int) -> list[tuple[int, int, int]
     flat_image = flatten(image)
     samples = sample(flat_image, samples)
 
+    # Divide by 255 to normalise to range [0, 1] for colour space conversion.
+    samples /= 255
+    # Convert to CIE-LAB colour space.
+    samples = rgb2lab(samples)
+
     # Perform k-means clustering on the colours in the image
     centroids = clusters(samples, k)
 
     # Convert the obtained centroids back to integer RGB values
-    colours: NDArray[int] = round_rgb(centroids)
+    colours: NDArray[int] = round_rgb(255 * lab2rgb(centroids))
 
     return [tuple(col) for col in colours]
 
