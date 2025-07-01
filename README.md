@@ -1,6 +1,6 @@
 # kcolours
 
-> Extracts a colour palette from an image in the terminal using. ![$k$-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
+Extracts a colour palette from an image in the terminal using ![k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering).
 
 ---
 ## Example
