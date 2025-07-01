@@ -3,7 +3,7 @@ from .colours import colour_palette, brightness
 from rich.console import Console
 
 
-@click.command()
+@click.command(context_settings={'show_default': True})
 @click.option('--k', type=int, default=6, help='Number of clusters.')
 @click.option('--samples', type=int, default=1000, help='Number of samples to take from the image.')
 @click.argument('path')
